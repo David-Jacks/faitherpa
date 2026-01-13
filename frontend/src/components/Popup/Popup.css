@@ -1,0 +1,20 @@
+.rp-popup-overlay{
+  position:fixed;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(0,0,0,0.45);
+  z-index:2000;
+}
+.rp-popup-card{
+  background:var(--card-bg,#fff);
+  color:var(--text-primary,#111);
+  padding:1.25rem;
+  border-radius:var(--card-radius);
+  width:min(35rem, calc(100% - 3rem));
+  box-shadow:0 0.75rem 1.875rem rgba(0,0,0,0.18);
+}
+.rp-popup-header h3{margin:0 0 0.5rem;font-size:1.2rem}
+.rp-popup-body{margin-bottom:1rem;line-height:1.4}
+.rp-popup-actions{display:flex;gap:0.625rem;justify-content:flex-end}

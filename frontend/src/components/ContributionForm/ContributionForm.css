@@ -1,0 +1,108 @@
+.rp-contrib-form{
+	display:flex;
+	flex-direction:column;
+	gap:1rem;
+	font-family:var(--font-ui);
+	color:var(--text-on-light);
+}
+.rp-fieldset{
+	border:0;
+	padding:0;
+	margin:0;
+	display:flex;
+	flex-direction:column;
+	gap:.5rem;
+}
+.rp-fieldset legend{
+	font-weight:700;
+	margin-bottom:.25rem;
+	font-family:var(--font-heading);
+	color:var(--text-on-light);
+}
+.rp-fieldset label{
+	display:flex;
+	flex-direction:column;
+	gap:.35rem;
+	font-size:.98rem;
+	color:var(--text-on-light);
+}
+.rp-fieldset input[type=text],
+.rp-fieldset input[type=email],
+.rp-fieldset input[type=password],
+.rp-fieldset input,
+.rp-fieldset input[type=number],
+.rp-fieldset textarea,
+.rp-fieldset select{
+	padding:.65rem .75rem;
+	border-radius:0.5rem;
+	font-size:0.98rem;
+	line-height:1.4;
+	color:var(--text-on-light);
+	background: #ffffff;
+	border: 0.0625rem solid rgba(var(--color-neutral-rgb), 0.6);
+}
+.rp-fieldset input::placeholder, .rp-fieldset textarea::placeholder{ color: rgba(var(--color-secondary-rgb),0.55) }
+.rp-checkbox{flex-direction:row;align-items:center;gap:.5rem;color:var(--app-text)}
+.rp-form-actions{display:flex;gap:.75rem;justify-content:flex-end;margin-top:.5rem}
+.rp-form-error{
+	color:var(--color-primary);
+	background: rgba(var(--color-primary-rgb), 0.08);
+	padding:.5rem;
+	border-radius:0.375rem;
+}
+.rp-form-success{
+	color:var(--color-accent);
+	background: rgba(var(--color-accent-rgb),0.08);
+	padding:.5rem;
+	border-radius:0.375rem;
+}
+
+.rp-field-error{display:block;color:var(--color-primary);font-size:0.9rem;margin-top:0.35rem}
+
+/* Adapt inputs for light color-scheme to ensure contrast */
+@media (prefers-color-scheme: light) {
+	.rp-fieldset input[type=text],
+	.rp-fieldset input[type=email],
+	.rp-fieldset input[type=password],
+	.rp-fieldset input,
+	.rp-fieldset input[type=number],
+	.rp-fieldset textarea{
+		background: rgba(0,0,0,0.04);
+		border: 0.0625rem solid rgba(var(--color-neutral-rgb), 0.14);
+		color: var(--app-text);
+	}
+	.rp-fieldset input::placeholder, .rp-fieldset textarea::placeholder{ color: rgba(var(--color-secondary-rgb),0.55) }
+	.rp-form-error{ background: rgba(var(--color-primary-rgb), 0.06); }
+	.rp-form-success{ background: rgba(var(--color-accent-rgb), 0.06); }
+}
+
+/* When rendered inside the modal form, force high-contrast inputs */
+.rp-modal.rp-modal--form .rp-fieldset input,
+.rp-modal.rp-modal--form .rp-fieldset textarea,
+.rp-modal.rp-modal--form .rp-fieldset select {
+	background: #ffffff !important;
+	color: var(--text-on-light) !important;
+	border: 0.0625rem solid rgba(var(--color-neutral-rgb), 0.6) !important;
+}
+.rp-modal.rp-modal--form .rp-fieldset label { color: var(--text-on-light) !important }
+.rp-modal.rp-modal--form .rp-fieldset input::placeholder,
+.rp-modal.rp-modal--form .rp-fieldset textarea::placeholder { color: rgba(var(--color-secondary-rgb),0.55) !important }
+
+/* Password row: input + toggle */
+.rp-password-row{display:flex;align-items:center;gap:0.5rem}
+.rp-password-row input{flex:1}
+.rp-password-toggle{
+	background: rgba(var(--color-neutral-rgb),0.06);
+	border: 0.0625rem solid rgba(var(--color-neutral-rgb),0.18);
+	color: var(--app-text);
+	padding:0.4rem 0.6rem;
+	border-radius:0.5rem;
+	cursor:pointer;
+	font-size:1.05rem;
+	display:inline-flex;
+	align-items:center;
+	justify-content:center;
+	min-width:2.75rem;
+}
+.rp-password-toggle:hover{border-color: rgba(var(--color-neutral-rgb),0.28)}
+.rp-password-toggle:focus{outline:0.1875rem solid rgba(var(--color-accent-rgb),0.12); outline-offset:0.125rem}

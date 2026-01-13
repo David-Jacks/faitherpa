@@ -1,0 +1,162 @@
+@import url('https://fonts.googleapis.com/css2?family=Aladin&family=Lora:ital,wght@0,400..700;1,400..700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  /* Named font variables for components */
+  --font-logo: 'Aladin', var(--font-family);
+  --font-heading: 'Lora', var(--font-family);
+  --font-ui: 'Montserrat', var(--font-family);
+  line-height: 1.5;
+  font-weight: 400;
+  /* Brand tokens (4 colors provided) */
+  --color-primary: #C66E52; /* coral */
+  --color-secondary: #758A93; /* muted blue-gray */
+  --color-accent: #E9B63B; /* warm gold */
+  --color-neutral: #ECD5BC; /* light beige neutral */
+
+  /* RGB helpers for rgba usage */
+  --color-primary-rgb: 198,110,82;
+  --color-secondary-rgb: 117,138,147;
+  --color-accent-rgb: 233,182,59;
+  --color-neutral-rgb: 236,213,188;
+
+  /* UI tokens derived from brand */
+  --color-overlay: rgba(var(--color-primary-rgb), 0.45);
+  --color-border: rgba(var(--color-neutral-rgb), 0.25);
+  --color-text: rgba(var(--color-secondary-rgb), 1);
+  --color-close: rgba(var(--color-secondary-rgb), 0.9);
+  --shadow-color: var(--color-primary-rgb);
+
+  /* app text and background should use tokens to avoid hardcoded values */
+  --app-text: rgba(255, 255, 255, 0.87);
+  --app-bg: #242424;
+  /* explicit readable text tokens for surfaces */
+  --text-on-dark: rgba(255,255,255,0.92);
+  --text-on-light: #213547;
+
+  color-scheme: light dark;
+  color: var(--app-text);
+  background-color: var(--app-bg);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  font-weight: 500;
+  color: var(--color-primary);
+  text-decoration: inherit;
+}
+a:hover {
+  color: rgba(var(--color-primary-rgb), 0.9);
+}
+
+body {
+  width: 100dvw;
+  height: 100dvh;
+  /* Do not center the whole app via body — pages control their own layout */
+  /* Add a small horizontal gutter so content isn't flush with screen edges */
+  padding-inline: clamp(0.75rem, 2vw, 1.5rem);
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 0.5rem;
+  border: 0.0625rem solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: var(--font-family);
+  --button-bg: rgba(var(--color-neutral-rgb), 1);
+  background-color: var(--button-bg);
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: var(--color-primary);
+}
+button:focus,
+button:focus-visible {
+  outline: 0.25rem auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    /* Light theme overrides mapped to brand tokens */
+    --color-primary: #C66E52;
+    --color-secondary: #758A93;
+    --color-accent: #E9B63B;
+    --color-neutral: #ECD5BC;
+    --button-bg: rgba(var(--color-neutral-rgb), 1);
+    --color-overlay: rgba(var(--color-primary-rgb), 0.18);
+    --color-border: rgba(var(--color-neutral-rgb), 0.35);
+    --color-text: rgba(var(--color-secondary-rgb), 1);
+    --color-close: rgba(var(--color-secondary-rgb), 0.9);
+    --shadow-color: var(--color-primary-rgb);
+    --app-text: #213547;
+    --app-bg: var(--color-neutral);
+    --text-on-dark: rgba(255,255,255,0.92);
+    --text-on-light: #213547;
+  }
+  a:hover {
+    color: rgba(var(--color-primary-rgb), 0.85);
+  }
+  button {
+    background-color: var(--button-bg);
+  }
+}
+
+/* Global: hide native scrollbars while preserving scroll behavior */
+html, body {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+
+/* WebKit browsers */
+*::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+/* Global logo / branding helpers: keep logo styles consistent across pages */
+:root {
+  --page-gutter: clamp(0.75rem, 2vw, 1.5rem);
+}
+
+/* Design tokens for layout and sizing */
+:root {
+  --container-max-width: 75rem; /* ~1200px */
+  --modal-max-width: 45rem; /* ~720px */
+  --card-radius: 0.75rem; /* ~12px */
+  --form-max-width: 26rem; /* ~416px */
+  --header-height: 5.5rem; /* ~88px */
+}
+
+.site-logo, .logo-mark, .contrib-logo {
+  font-family: var(--font-logo);
+  color: var(--color-primary);
+  display: inline-block;
+  line-height: 1;
+  letter-spacing: 0.2px;
+  text-rendering: optimizeLegibility;
+}
+
+/* sensible default sizing; pages can override with media queries */
+.site-logo { font-size: 1.6rem; font-weight: 700 }
+
+/* Ensure main content doesn't hug the viewport edges on very small screens */
+main, .landing-main, .landing-top, .contrib-header {
+  padding-inline: var(--page-gutter);
+}
