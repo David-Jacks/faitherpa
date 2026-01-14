@@ -10,35 +10,25 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 4000;
-
+const allowedOrigin = process.env.ALLOWED_ORIGIN || "";
 // Basic middleware
 app.use(helmet());
-// Allow requests only from configured origins (Netlify site and localhost dev).
-const allowedOrigins = [process.env.ALLOWED_ORIGIN, "http://localhost:5173"];
+// Simple CORS policy: allow only the configured Netlify origin and localhost dev
+// origins. Set `ALLOWED_ORIGIN` in your environment to override the default.
+const allowedOrigins = [allowedOrigin, "http://localhost:5173"];
 
 app.use(
   cors({
     origin: (origin, callback) => {
-      // If no origin is provided (server-to-server or curl), allow by default.
+      // Allow non-browser requests (no Origin header) so curl/server-to-server calls work.
       if (!origin) return callback(null, true);
       if (allowedOrigins.includes(origin)) return callback(null, true);
-      return callback(new Error("CORS policy: Origin not allowed"));
+      return callback(new Error("Not allowed by CORS"));
     },
   })
 );
 
-// Defensive middleware: reject browser requests that include an Origin header
-// not present in `allowedOrigins` with a clear 403 JSON response.
-app.use((req, res, next) => {
-  const origin = req.get("origin");
-  if (origin && !allowedOrigins.includes(origin)) {
-    return res.status(403).json({ error: "origin_not_allowed" });
-  }
-  next();
-});
 app.use(express.json());
-// Avoid logging health-check pings to keep logs clean (Render probes are frequent)
-app.use(morgan("dev", { skip: (req, _res) => req.path === "/health" }));
 
 // Health check
 app.get("/health", (_req, res) => {
