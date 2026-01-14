@@ -144,6 +144,14 @@ html, body {
   --header-height: 5.5rem; /* ~88px */
 }
 
+/* Responsive tokens and breakpoints (mobile-first) */
+:root {
+  --bp-small: 480px;
+  --bp-medium: 800px;
+  --bp-large: 1100px;
+  --gutter-mobile: 1rem;
+}
+
 .site-logo, .logo-mark, .contrib-logo {
   font-family: var(--font-logo);
   color: var(--color-primary);
@@ -159,4 +167,31 @@ html, body {
 /* Ensure main content doesn't hug the viewport edges on very small screens */
 main, .landing-main, .landing-top, .contrib-header {
   padding-inline: var(--page-gutter);
+}
+
+/* Make images and svg icons scale responsively */
+img, svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Tighter default layout for small screens */
+@media (max-width: 480px) {
+  :root {
+    --page-gutter: var(--gutter-mobile);
+    --header-height: 4.25rem;
+    --form-max-width: 100%;
+    --container-max-width: 100%;
+  }
+  body { padding-inline: var(--page-gutter); }
+  h1 { font-size: 1.8rem; }
+  button { padding: 0.5rem 0.75rem; font-size: 0.95rem }
+}
+
+@media (min-width: 481px) and (max-width: 800px) {
+  :root {
+    --page-gutter: clamp(0.75rem, 2vw, 1rem);
+    --header-height: 4.75rem;
+  }
 }

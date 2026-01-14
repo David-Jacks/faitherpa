@@ -11,25 +11,27 @@
   position: relative;
   padding-block: 1rem;
   min-height: var(--header-height);
+  width: 100%;
+  background: transparent;
 }
 
 .landing-top-inner {
   max-width: var(--container-max-width);
-  margin: 0; /* keep left edge flush with page gutter */
-  padding-inline-start: var(--page-gutter);
+  margin: 0 auto; /* center inner container */
+  padding-inline: var(--page-gutter);
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
 }
 
 .site-tag {
-  position: absolute;
-  right: var(--page-gutter);
-  top: 50%;
-  transform: translateY(-50%);
   color: rgba(var(--color-secondary-rgb), 0.75);
   font-size: 0.9rem;
   font-weight: 500;
   white-space: nowrap;
+  margin-left: auto;
 }
 
 .landing-logo {
@@ -37,6 +39,7 @@
   align-items: center;
   height: 4rem;
   padding-inline-start: 0; /* align with inner container */
+  gap: 0.5rem;
 }
 
 .contrib-logo, .logo-mark {
@@ -171,12 +174,48 @@
   border: 0.0625rem solid var(--color-border);
 }
 
+.landing-main {
+  display: flex;
+  gap: 2.5rem;
+  align-items: center; /* vertical center */
+  justify-content: flex-start; /* align left so hero starts with logo gutter */
+  width: 100%;
+  max-width: var(--container-max-width);
+  margin: 0; /* keep left edge aligned */
+  padding: 2rem 0 3rem;
+  padding-inline-start: var(--page-gutter);
+  min-height: calc(100vh - var(--header-height));
+}
+
 @media (max-width: 800px) {
   .landing-main { flex-direction: column; padding-inline-start: var(--page-gutter); }
   .landing-top-inner { padding-inline-start: var(--page-gutter); }
   .logo-mark { font-size: 2.8rem }
-  .site-tag { position: static; transform: none; margin-left: auto; }
+  .site-tag { margin-left: 0; }
   .hero-title { font-size: 1.6rem; }
+  /* push main content below header to avoid overlap */
+  .landing-main { padding-top: calc(var(--header-height) + 0.5rem); }
+}
+
+@media (max-width: 480px) {
+  .landing-top-inner { flex-direction: column; align-items: flex-start; gap: 0.5rem }
+  .site-tag { align-self: flex-start }
+  .contrib-logo { font-size: 1.15rem }
+  .logo-mark { font-size: 2rem }
+  .landing-main { padding-top: calc(var(--header-height) + 0.75rem); gap: 1rem; padding: 1rem 0 }
+  .hero-title { font-size: 1.4rem }
+}
+
+/* Further adjust for very small screens */
+@media (max-width: 480px) {
+  .landing-root { min-height: auto }
+  .landing-top { padding-block: 0.5rem }
+  .landing-main { gap: 1rem; padding: 1rem 0; }
+  .landing-hero { max-width: 100%; }
+  .hero-title { font-size: 1.4rem; line-height: 1.25 }
+  .lead { font-size: 0.98rem }
+  .hero-actions { flex-direction: column; align-items: stretch }
+  .btn--large { width: 100%; }
 }
 
 /* Accessible focus states for CTAs */
@@ -187,4 +226,34 @@
 
 .btn--primary:hover { transform: translateY(-0.1875rem); box-shadow: 0 0.875rem 2.125rem rgba(var(--shadow-color), 0.12) }
 .btn--outline:hover { transform: translateY(-0.125rem) }
+
+/* Target very small viewports (<=425px) to avoid header and hero overlap */
+@media (max-width: 425px) {
+  .landing-top {
+    padding-block: 0.6rem;
+    min-height: 3.6rem;
+    background: var(--app-bg);
+    box-shadow: 0 6px 18px rgba(var(--shadow-color), 0.06);
+  }
+
+  .landing-top-inner {
+    padding-inline: calc(var(--page-gutter) - 0.25rem);
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .contrib-logo { font-size: 1rem }
+  .logo-mark { font-size: 1.4rem }
+  .site-tag { font-size: 0.85rem; white-space: normal; opacity: 0.95 }
+
+  /* Ensure main content is pushed well below header */
+  .landing-main { padding-top: calc(3.6rem + 1rem); }
+
+  /* Reduce hero spacing to fit small screens */
+  .hero-title { font-size: 1.2rem; line-height: 1.18 }
+  .lead { font-size: 0.95rem }
+  .hero-actions { gap: 0.5rem }
+  .btn--large { padding: 0.8rem; font-size: 1rem }
+}
 

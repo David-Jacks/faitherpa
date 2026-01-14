@@ -6,7 +6,7 @@ import type {
 } from "./frontend_types";
 
 const apiBase = "/api";
-
+console.log(apiBase);
 const api: AxiosInstance = axios.create({
   baseURL: apiBase,
   headers: { "Content-Type": "application/json" },
