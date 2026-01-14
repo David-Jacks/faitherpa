@@ -1,25 +1,16 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import { error } from "node:console";
 
 dotenv.config();
 
 export async function connectDB(uri?: string) {
-  const envUri = process.env.MONGO_URI;
-  const dbUser = process.env.DB_USER || "djackfaith05_db_user";
-  const dbPass = process.env.DB_PASS;
+  const envUri = process.env.MONGO_URI || "";
 
-  if (!dbUser || !dbPass) {
+  if (!envUri) {
     console.log("error loading envs");
   }
 
-  const encodedUser = encodeURIComponent(dbUser);
-  const encodedPass = dbPass ? encodeURIComponent(dbPass) : null;
-
-  const mongoUri =
-    uri ||
-    envUri ||
-    `mongodb+srv://${encodedUser}:${encodedPass}@cluster0.ko9wk8w.mongodb.net/faitherpa?retryWrites=true&w=majority`;
+  const mongoUri = uri || envUri;
   try {
     await mongoose.connect(mongoUri);
     // eslint-disable-next-line no-console

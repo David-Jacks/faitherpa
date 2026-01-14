@@ -30,6 +30,7 @@
     "dev": "nodemon --config nodemon.json",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/server.js",
+    "postinstall": "npm run build",
     "typecheck": "tsc --noEmit",
     "seed": "node seed-db.js",
     "test-api": "node test-api.js"
