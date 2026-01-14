@@ -15,7 +15,8 @@ const PORT = process.env.PORT || 4000;
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
-app.use(morgan("dev"));
+// Avoid logging health-check pings to keep logs clean (Render probes are frequent)
+app.use(morgan("dev", { skip: (req, _res) => req.path === "/health" }));
 
 // Health check
 app.get("/health", (_req, res) => {
