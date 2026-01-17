@@ -13,11 +13,9 @@ const Home: React.FC = () => {
   return (
     <main className="landing-root">
       <div className="landing-top">
-        <div className="landing-top-inner contrib-header">
           <div className="landing-logo" aria-hidden>
             <span className="contrib-logo">Faitherpa</span>
           </div>
-        </div>
         <div className="site-tag">Supporting my vision and show me love</div>
       </div>
 
