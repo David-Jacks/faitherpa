@@ -116,7 +116,7 @@ const ContributionForm: React.FC<Props> = ({ onClose }) => {
       <fieldset className="rp-fieldset">
         <legend>Contribution</legend>
         <label>
-          Amount (USD)
+          Amount (GBP)
           <input
             value={amount}
             onChange={e => {
@@ -158,7 +158,7 @@ const ContributionForm: React.FC<Props> = ({ onClose }) => {
       {success && (
         <div className="rp-form-success" role="status">
           <p>Thank you — your contribution was received.</p>
-          <p>David Jackson will contact you to process payment and confirm the contribution.</p>
+          <p><strong>David Jackson will contact you to process payment and confirm the contribution.</strong></p>
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.75rem' }}>
             <button type="button" className="btn btn--primary" onClick={onClose}>Done</button>
           </div>

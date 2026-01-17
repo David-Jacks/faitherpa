@@ -24,7 +24,7 @@ const Home: React.FC = () => {
           <h1 className="hero-title"><span className="plea">Please help me</span> by supporting this cause</h1>
           <p className="lead">
             Join other supporters by contributing today. You may choose to remain
-            anonymous — names are stored but displayed only when allowed. Contributions
+            anonymous. Please note that names are stored but displayed only when allowed. Contributions
             are confirmed by an administrator before contributor-only access is granted.
           </p>
 
@@ -42,7 +42,7 @@ const Home: React.FC = () => {
       <Modal isOpen={learnOpen} onClose={() => setLearnOpen(false)} title="About this campaign">
         <div>
           <p>
-            I am a final-year student facing urgent financial difficulty covering my tuition and fees. Completing my degree is essential — I have received a conditional graduate offer from Barclays that depends on graduation. Without support to bridge this gap, I risk being unable to take up this career-making opportunity.
+            I am a final-year student facing urgent financial difficulty covering my tuition and fees. Completing my degree is essential. I have received a conditional graduate offer from Barclays that depends on graduation. Without your support to bridge this gap, I risk being unable to take up this career-making opportunity and dropping out of school. 
           </p>
 
           <p>
@@ -51,15 +51,18 @@ const Home: React.FC = () => {
 
           <h4>Profile</h4>
           <p>
-            <strong>Name:</strong> [Your name here] <br />
-            <strong>Course:</strong> Final-year student in [Your course / department] <br />
-            <strong>Highlights:</strong> Recipient of academic awards and internships; passionate about fintech, mentoring, and community projects.
+            <strong>Name:</strong> David Jackson <br />
+            <strong>Course:</strong> Final-year student in BSc Computer Science <br />
+            <strong>Highlights:</strong> Recipient of academic awards and internships <strong>|||</strong> passionate about fintech <strong>|||</strong> Loves mentoring and participating in community projects.
           </p>
-
-          <p>
-            Please replace the placeholders above with your real details to personalise this message before sharing. If you’d like, you can also provide a short photo or link to your profile.
-          </p>
-
+          <ul className="profile-links">
+            <li>
+              <a href="https://www.linkedin.com/in/david-jackson-976741245/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            </li>
+            <li>
+              <a href="https://davidjackson.netlify.app/" target="_blank" rel="noopener noreferrer">Portfolio</a>
+            </li>
+          </ul>
           <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end', marginTop: '1rem' }}>
             <button className="btn btn--outline" onClick={() => setLearnOpen(false)}>Close</button>
             <button className="btn btn--primary" onClick={() => { setLearnOpen(false); setOpen(true); }}>Contribute</button>

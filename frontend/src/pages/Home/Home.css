@@ -145,6 +145,33 @@
   line-height: 1.6;
 }
 
+/* Profile links (LinkedIn, Portfolio) shown in a compact list */
+.profile-links {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0 0 0;
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+.profile-links li { list-style: none; }
+.profile-links a {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.15rem 0.25rem;
+  border-radius: 0.35rem;
+}
+.profile-links a:hover,
+.profile-links a:focus {
+  text-decoration: underline;
+  outline: none;
+}
+
+@media (max-width: 480px) {
+  .profile-links { flex-direction: column; align-items: flex-start; gap: 0.4rem; }
+}
+
 .hero-actions {
   display: flex;
   gap: 1rem;
