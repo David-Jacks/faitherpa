@@ -88,6 +88,18 @@ html {
   background-color: rgb(26, 26, 26);
 }
 
+/* Prevent iOS Safari from auto-zooming small form controls by ensuring
+   inputs/selects/textareas compute at least 16px. Keep user zoom enabled. */
+html, body {
+  -webkit-text-size-adjust: 100%; /* allow normal text-size behavior but avoid iOS auto-zoom */
+}
+
+input,
+textarea,
+select {
+  font-size: 16px;
+}
+
 body {
   max-width: 1440px;
   width: 100dvw;
