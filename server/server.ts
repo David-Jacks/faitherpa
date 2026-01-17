@@ -16,7 +16,7 @@ app.use(helmet());
 // Simple CORS policy: allow only the configured Netlify origin and localhost dev
 // origins. Set `ALLOWED_ORIGIN` in your environment to override the default.
 const allowedOrigins = [allowedOrigin, "http://localhost:5173"];
-console.log(allowedOrigin);
+// console.log(allowedOrigin);
 app.use(
   cors({
     origin: (origin, callback) => {
@@ -28,6 +28,7 @@ app.use(
   })
 );
 
+app.use(morgan("combined"));
 app.use(express.json());
 
 // Health check

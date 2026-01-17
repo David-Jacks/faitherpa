@@ -5,10 +5,8 @@ import type {
   ContributionCreate,
 } from "./frontend_types";
 
-// Configure API base via Vite env var `VITE_API_BASE`. When not provided,
-// fall back to the relative `/api` path for same-origin setups.
-const apiBase = (import.meta.env.VITE_API_BASE as string) || "/api";
-console.log("API base:", apiBase);
+const apiBase = import.meta.env.VITE_API_PROXY || "/api";
+
 const api: AxiosInstance = axios.create({
   baseURL: apiBase,
   headers: { "Content-Type": "application/json" },
