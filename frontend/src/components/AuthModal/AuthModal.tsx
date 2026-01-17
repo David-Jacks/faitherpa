@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import Modal from '../Modal/Modal'
-import Popup from '../Popup/Popup'
 import './AuthModal.css'
 import { useNavigate } from 'react-router-dom'
 
@@ -119,19 +118,17 @@ const AuthModal: React.FC<Props> = ({ isOpen, onClose }) => {
       </form>
 
       {authResult && (
-        <Popup
-          heading={authResult.hasConfirmed ? 'Contribution Confirmed' : 'Contribution Not Confirmed'}
-          body={<>
-            {authResult.hasConfirmed ? (
-              <p>Your contribution has been confirmed. You may proceed to view details.</p>
-            ) : (
-              <p>Your contribution is not yet confirmed. Please wait for confirmation before proceeding.</p>
-            )}
-          </>}
-          buttons={[
-            {
-              label: authResult.hasConfirmed ? 'Proceed' : "Don't",
-              onClick: () => {
+        <div className="rp-form-success" role="status">
+          {authResult.hasConfirmed ? (
+            <p>Your contribution has been confirmed. You may proceed to view details.</p>
+          ) : (
+            <p>Your contribution is not yet confirmed. Please wait for confirmation before proceeding.</p>
+          )}
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.75rem' }}>
+            <button
+              type="button"
+              className={authResult.hasConfirmed ? 'btn btn--primary' : 'btn btn--outline'}
+              onClick={() => {
                 if (authResult.hasConfirmed) {
                   try { localStorage.setItem('auth_token', authResult.token) } catch {}
                   onClose()
@@ -139,11 +136,12 @@ const AuthModal: React.FC<Props> = ({ isOpen, onClose }) => {
                 } else {
                   setAuthResult(null)
                 }
-              },
-              variant: authResult.hasConfirmed ? 'primary' : 'secondary'
-            }
-          ]}
-        />
+              }}
+            >
+              {authResult.hasConfirmed ? 'Proceed' : "Don't"}
+            </button>
+          </div>
+        </div>
       )}
     </Modal>
   )

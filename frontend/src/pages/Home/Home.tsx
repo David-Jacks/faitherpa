@@ -3,7 +3,7 @@ import './Home.css';
 import Modal from '../../components/Modal/Modal';
 import ContributionForm from '../../components/ContributionForm/ContributionForm';
 import AuthModal from '../../components/AuthModal/AuthModal';
-import Popup from '../../components/Popup/Popup';
+// Popup replaced by Modal
 
 const Home: React.FC = () => {
   const [open, setOpen] = useState(false)
@@ -39,37 +39,33 @@ const Home: React.FC = () => {
         <ContributionForm onClose={() => setOpen(false)} />
       </Modal>
       <AuthModal isOpen={authOpen} onClose={() => setAuthOpen(false)} />
-      {learnOpen && (
-        <Popup
-          heading="About this campaign"
-          body={
-            <div>
-              <p>
-                I am a final-year student facing urgent financial difficulty covering my tuition and fees. Completing my degree is essential — I have received a conditional graduate offer from Barclays that depends on graduation. Without support to bridge this gap, I risk being unable to take up this career-making opportunity.
-              </p>
+      <Modal isOpen={learnOpen} onClose={() => setLearnOpen(false)} title="About this campaign">
+        <div>
+          <p>
+            I am a final-year student facing urgent financial difficulty covering my tuition and fees. Completing my degree is essential — I have received a conditional graduate offer from Barclays that depends on graduation. Without support to bridge this gap, I risk being unable to take up this career-making opportunity.
+          </p>
 
-              <p>
-                Any contribution, large or small, will directly support my ability to graduate and honour the offer I have worked hard to secure. Your support has an immediate, measurable impact on my future career and financial stability.
-              </p>
+          <p>
+            Any contribution, large or small, will directly support my ability to graduate and honour the offer I have worked hard to secure. Your support has an immediate, measurable impact on my future career and financial stability.
+          </p>
 
-              <h4>Profile</h4>
-              <p>
-                <strong>Name:</strong> [Your name here] <br />
-                <strong>Course:</strong> Final-year student in [Your course / department] <br />
-                <strong>Highlights:</strong> Recipient of academic awards and internships; passionate about fintech, mentoring, and community projects.
-              </p>
+          <h4>Profile</h4>
+          <p>
+            <strong>Name:</strong> [Your name here] <br />
+            <strong>Course:</strong> Final-year student in [Your course / department] <br />
+            <strong>Highlights:</strong> Recipient of academic awards and internships; passionate about fintech, mentoring, and community projects.
+          </p>
 
-              <p>
-                Please replace the placeholders above with your real details to personalise this message before sharing. If you’d like, you can also provide a short photo or link to your profile.
-              </p>
-            </div>
-          }
-          buttons={[
-            { label: 'Close', onClick: () => setLearnOpen(false), variant: 'secondary' },
-            { label: 'Contribute', onClick: () => { setLearnOpen(false); setOpen(true) }, variant: 'primary' }
-          ]}
-        />
-      )}
+          <p>
+            Please replace the placeholders above with your real details to personalise this message before sharing. If you’d like, you can also provide a short photo or link to your profile.
+          </p>
+
+          <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end', marginTop: '1rem' }}>
+            <button className="btn btn--outline" onClick={() => setLearnOpen(false)}>Close</button>
+            <button className="btn btn--primary" onClick={() => { setLearnOpen(false); setOpen(true); }}>Contribute</button>
+          </div>
+        </div>
+      </Modal>
     </main>
   );
 };

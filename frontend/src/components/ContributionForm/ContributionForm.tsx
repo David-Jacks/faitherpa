@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import './ContributionForm.css'
-import Popup from '../Popup/Popup'
 import { createContribution } from '../../../frontend_apis'
 
 type Props = {
@@ -157,16 +156,13 @@ const ContributionForm: React.FC<Props> = ({ onClose }) => {
 
       {error && <div className="rp-form-error">{error}</div>}
       {success && (
-        <Popup
-          heading="Contribution Received"
-          body={<>
-            <p>Thank you — your contribution was received.</p>
-            <p>David Jackson will contact you to process payment and confirm the contribution.</p>
-          </>}
-          buttons={[
-            { label: 'Done', onClick: onClose, variant: 'primary' }
-          ]}
-        />
+        <div className="rp-form-success" role="status">
+          <p>Thank you — your contribution was received.</p>
+          <p>David Jackson will contact you to process payment and confirm the contribution.</p>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.75rem' }}>
+            <button type="button" className="btn btn--primary" onClick={onClose}>Done</button>
+          </div>
+        </div>
       )}
 
       <div className="rp-form-actions">
