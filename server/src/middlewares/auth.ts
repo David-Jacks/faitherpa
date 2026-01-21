@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { has as tokenIsBlacklisted } from "../utils/tokenBlacklist";
+import sendError from "../utils/errorResponse";
 import User from "../models/User";
 
 const JWT_SECRET = process.env.JWT_SECRET || "dev-secret";
@@ -12,7 +13,7 @@ export interface AuthedRequest extends Request {
 export const authenticateJWT = async (
   req: AuthedRequest,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const auth = req.header("authorization") || req.header("Authorization");
@@ -20,11 +21,27 @@ export const authenticateJWT = async (
       const token = auth.slice(7);
       const decoded: any = jwt.verify(token, JWT_SECRET);
       if (tokenIsBlacklisted(token))
-        return res.status(401).json({ error: "token_revoked" });
+        return sendError(
+          res,
+          401,
+          "token_revoked",
+          "Token revoked — please sign in again.",
+        );
       if (!decoded || !decoded.id)
-        return res.status(401).json({ error: "invalid_token" });
+        return sendError(
+          res,
+          401,
+          "invalid_token",
+          "Invalid authentication token.",
+        );
       const user = await User.findById(decoded.id).exec();
-      if (!user) return res.status(401).json({ error: "invalid_user" });
+      if (!user)
+        return sendError(
+          res,
+          401,
+          "invalid_user",
+          "User not found for provided token.",
+        );
       req.user = user;
       return next();
     }
@@ -33,21 +50,37 @@ export const authenticateJWT = async (
     const userId = req.header("x-user-id");
     if (userId) {
       const user = await User.findById(userId).exec();
-      if (!user) return res.status(401).json({ error: "invalid_user" });
+      if (!user)
+        return sendError(
+          res,
+          401,
+          "invalid_user",
+          "User not found for provided x-user-id header.",
+        );
       req.user = user;
       return next();
     }
 
-    return res.status(401).json({ error: "missing_auth" });
+    return sendError(
+      res,
+      401,
+      "missing_auth",
+      "Authorization required (Bearer token or x-user-id header).",
+    );
   } catch (err) {
-    return res.status(401).json({ error: "auth_failed" });
+    return sendError(
+      res,
+      401,
+      "auth_failed",
+      "Authentication failed — invalid or expired token.",
+    );
   }
 };
 
 export const requireAdmin = (
   req: AuthedRequest,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const user = req.user;
   if (!user) return res.status(401).json({ error: "missing_user" });
@@ -58,7 +91,7 @@ export const requireAdmin = (
 export const requireConfirmedContributor = async (
   req: AuthedRequest,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const user = req.user;
   if (!user) return res.status(401).json({ error: "missing_user" });

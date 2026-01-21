@@ -12,6 +12,29 @@ const api: AxiosInstance = axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
+// Normalize API errors so callers receive a friendly message when axios rejects.
+api.interceptors.response.use(
+  (resp) => resp,
+  (err) => {
+    try {
+      const resp = err?.response;
+      if (resp && resp.data) {
+        // Prefer `message` (human friendly) then `error` (machine code), then statusText
+        const d = resp.data as any;
+        const msg =
+          d.message ||
+          d.error ||
+          resp.statusText ||
+          `Request failed (${resp.status})`;
+        return Promise.reject(new Error(msg));
+      }
+      return Promise.reject(new Error(err.message || "Network error"));
+    } catch (e) {
+      return Promise.reject(new Error("Unknown API error"));
+    }
+  },
+);
+
 // Formspree endpoint can be configured via env: VITE_FORMSPREE_ENDPOINT
 const FORMSPREE_ENDPOINT =
   import.meta.env.VITE_FORMSPREE_ENDPOINT ||

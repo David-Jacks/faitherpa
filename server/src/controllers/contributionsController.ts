@@ -4,6 +4,7 @@ import User from "../models/User";
 import bcrypt from "bcrypt";
 import mongoose from "mongoose";
 import { AuthedRequest } from "../middlewares/auth";
+import sendError from "../utils/errorResponse";
 
 export const createContribution = async (req: Request, res: Response) => {
   try {
@@ -19,10 +20,20 @@ export const createContribution = async (req: Request, res: Response) => {
     } = req.body;
     // payload logging removed
     if (amount == null)
-      return res.status(400).json({ error: "amount_required" });
+      return sendError(
+        res,
+        400,
+        "amount_required",
+        "Contribution amount is required.",
+      );
 
     if (!isAnonymous && !name)
-      return res.status(400).json({ error: "name_required" });
+      return sendError(
+        res,
+        400,
+        "name_required",
+        "Name is required for non-anonymous contributions.",
+      );
 
     const session = await mongoose.startSession();
     try {
@@ -39,7 +50,7 @@ export const createContribution = async (req: Request, res: Response) => {
         userDoc = await User.findOneAndUpdate(
           filter,
           { $setOnInsert: setOnInsert },
-          { session, upsert: true, new: true }
+          { session, upsert: true, new: true },
         ).exec();
       } else {
         // no email/phone provided — create a user record with name (non-unique)
@@ -52,7 +63,7 @@ export const createContribution = async (req: Request, res: Response) => {
         "createContribution userDoc (transaction):",
         userDoc && userDoc._id
           ? { id: userDoc._id.toString(), name: userDoc.name }
-          : userDoc
+          : userDoc,
       );
       const createdContrib = (await Contribution.create(
         [
@@ -66,7 +77,7 @@ export const createContribution = async (req: Request, res: Response) => {
             contributor: userDoc._id,
           },
         ],
-        { session }
+        { session },
       )) as any;
       const cd = Array.isArray(createdContrib)
         ? createdContrib[0]
@@ -74,7 +85,7 @@ export const createContribution = async (req: Request, res: Response) => {
       if (!cd || !cd.contributor)
         console.warn(
           "Contribution created without contributor (transaction path)",
-          userDoc
+          userDoc,
         );
       await session.commitTransaction();
       session.endSession();
@@ -82,7 +93,7 @@ export const createContribution = async (req: Request, res: Response) => {
     } catch (err) {
       console.error(
         "Transaction error in createContribution:",
-        (err as any)?.message || err
+        (err as any)?.message || err,
       );
       await session.abortTransaction();
       session.endSession();
@@ -104,7 +115,7 @@ export const createContribution = async (req: Request, res: Response) => {
         "createContribution userDoc (fallback):",
         userDoc && userDoc._id
           ? { id: userDoc._id.toString(), name: userDoc.name }
-          : userDoc
+          : userDoc,
       );
       const contributionDoc = await Contribution.create({
         amount,
@@ -117,14 +128,19 @@ export const createContribution = async (req: Request, res: Response) => {
       if (!contributionDoc.contributor)
         console.warn(
           "Contribution created without contributor (fallback path) — userDoc:",
-          userDoc && userDoc._id ? userDoc._id.toString() : userDoc
+          userDoc && userDoc._id ? userDoc._id.toString() : userDoc,
         );
       return res
         .status(201)
         .json({ user: userDoc, contribution: contributionDoc });
     }
   } catch (err) {
-    return res.status(500).json({ error: "create_contribution_failed" });
+    return sendError(
+      res,
+      500,
+      "create_contribution_failed",
+      "Failed to create contribution.",
+    );
   }
 };
 
@@ -141,7 +157,12 @@ export const listContributions = async (req: Request, res: Response) => {
     }));
     return res.json({ contributions: safe });
   } catch (err) {
-    return res.status(500).json({ error: "list_contributions_failed" });
+    return sendError(
+      res,
+      500,
+      "list_contributions_failed",
+      "Failed to list contributions.",
+    );
   }
 };
 
@@ -153,13 +174,18 @@ export const getTotal = async (_req: Request, res: Response) => {
     const total = result?.[0]?.total || 0;
     return res.json({ total });
   } catch (err) {
-    return res.status(500).json({ error: "get_total_failed" });
+    return sendError(
+      res,
+      500,
+      "get_total_failed",
+      "Failed to compute total contributions.",
+    );
   }
 };
 
 export const confirmContribution = async (
   req: AuthedRequest,
-  res: Response
+  res: Response,
 ) => {
   try {
     const { id } = req.params;
@@ -170,7 +196,12 @@ export const confirmContribution = async (
     await contrib.save();
     return res.json({ contribution: contrib });
   } catch (err) {
-    return res.status(500).json({ error: "confirm_failed" });
+    return sendError(
+      res,
+      500,
+      "confirm_failed",
+      "Failed to confirm contribution.",
+    );
   }
 };
 
@@ -180,20 +211,25 @@ export const confirmContributor = async (req: AuthedRequest, res: Response) => {
     if (!userId) return res.status(400).json({ error: "user_id_required" });
     const result = await Contribution.updateMany(
       { contributor: userId, confirmed: { $ne: true } },
-      { $set: { confirmed: true } }
+      { $set: { confirmed: true } },
     ).exec();
     return res.json({
       success: true,
       modifiedCount: (result as any).modifiedCount || 0,
     });
   } catch (err) {
-    return res.status(500).json({ error: "confirm_contributor_failed" });
+    return sendError(
+      res,
+      500,
+      "confirm_contributor_failed",
+      "Failed to confirm contributor contributions.",
+    );
   }
 };
 
 export const deleteContributionAndUser = async (
   req: AuthedRequest,
-  res: Response
+  res: Response,
 ) => {
   const session = await mongoose.startSession();
   try {
@@ -221,11 +257,16 @@ export const deleteContributionAndUser = async (
   } catch (err) {
     console.error(
       "Outer catch createContribution:",
-      (err as any)?.message || err
+      (err as any)?.message || err,
     );
     await session.abortTransaction();
     session.endSession();
-    return res.status(500).json({ error: "delete_failed" });
+    return sendError(
+      res,
+      500,
+      "delete_failed",
+      "Failed to delete contribution and user.",
+    );
   }
 };
 

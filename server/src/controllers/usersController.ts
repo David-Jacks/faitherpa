@@ -3,11 +3,12 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/User";
 import Contribution from "../models/Contribution";
+import sendError from "../utils/errorResponse";
 
 export const createUser = async (req: Request, res: Response) => {
   try {
     const { name, email, phoneNumber, password } = req.body;
-    if (!name) return res.status(400).json({ error: "name required" });
+    if (!name) return sendError(res, 400, "name_required", "Name is required.");
     const toCreate: any = { name };
     if (email) toCreate.email = email;
     if (phoneNumber) toCreate.phoneNumber = phoneNumber;
@@ -20,7 +21,7 @@ export const createUser = async (req: Request, res: Response) => {
     delete userObj.password;
     return res.status(201).json(userObj);
   } catch (err) {
-    return res.status(500).json({ error: "create_user_failed" });
+    return sendError(res, 500, "create_user_failed", "Failed to create user.");
   }
 };
 
@@ -29,20 +30,47 @@ export const authenticate = async (req: Request, res: Response) => {
     const { phoneNumber, password } = req.body;
     const phoneRegex = /^\+?\d{7,15}$/;
     if (!phoneNumber || !password)
-      return res.status(400).json({ error: "credentials_required" });
+      return sendError(
+        res,
+        400,
+        "credentials_required",
+        "Phone number and password are required.",
+      );
     if (!phoneRegex.test(phoneNumber))
-      return res.status(400).json({ error: "invalid_phone" });
+      return sendError(
+        res,
+        400,
+        "invalid_phone",
+        "Enter a valid phone number (digits, optional leading +).",
+      );
     const user = await User.findOne({ phoneNumber }).exec();
-    if (!user) return res.status(401).json({ error: "invalid_credentials" });
+    if (!user)
+      return sendError(
+        res,
+        401,
+        "invalid_credentials",
+        "No account found for that phone number.",
+      );
     if (!user.password)
-      return res.status(401).json({ error: "no_password_set" });
+      return sendError(
+        res,
+        401,
+        "no_password_set",
+        "This account has no password set; please reset or sign up.",
+      );
     const ok = await bcrypt.compare(password, user.password);
-    if (!ok) return res.status(401).json({ error: "invalid_credentials" });
+    if (!ok)
+      return sendError(
+        res,
+        401,
+        "invalid_credentials",
+        "Phone number or password incorrect.",
+      );
     // return a simple token (optional)
     const token = jwt.sign(
       { id: user._id, isAdmin: !!user.isAdmin },
       process.env.JWT_SECRET || "dev-secret",
-      { expiresIn: "7d" }
+      { expiresIn: "7d" },
     );
     const u = user.toObject();
     delete u.password;
@@ -53,7 +81,7 @@ export const authenticate = async (req: Request, res: Response) => {
     });
     return res.json({ token, user: u, hasConfirmed: !!hasConfirmed });
   } catch (err) {
-    return res.status(500).json({ error: "auth_failed" });
+    return sendError(res, 500, "auth_failed", "Authentication process failed.");
   }
 };
 
@@ -61,14 +89,19 @@ export const logout = async (req: Request, res: Response) => {
   try {
     const auth = req.header("authorization") || req.header("Authorization");
     if (!auth || !auth.startsWith("Bearer "))
-      return res.status(400).json({ error: "missing_token" });
+      return sendError(
+        res,
+        400,
+        "missing_token",
+        "Authorization header missing or malformed.",
+      );
     const token = auth.slice(7);
     // blacklist token
     const { add } = await import("../utils/tokenBlacklist");
     add(token);
     return res.json({ ok: true });
   } catch (err) {
-    return res.status(500).json({ error: "logout_failed" });
+    return sendError(res, 500, "logout_failed", "Logout failed.");
   }
 };
 
@@ -77,7 +110,7 @@ export const getContributors = async (req: any, res: Response) => {
     // prevent browser caching / conditional requests for this endpoint
     res.setHeader(
       "Cache-Control",
-      "no-store, no-cache, must-revalidate, proxy-revalidate"
+      "no-store, no-cache, must-revalidate, proxy-revalidate",
     );
     res.setHeader("Pragma", "no-cache");
     res.setHeader("Expires", "0");

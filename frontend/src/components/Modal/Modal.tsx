@@ -38,15 +38,31 @@ const Modal: React.FC<ModalProps> = ({
       if (e.key === "Escape") onClose();
     };
 
-    // Prevent background scrolling while modal is open
+    // Prevent background scrolling while modal is open.
+    // On iOS Safari `overflow: hidden` alone doesn't stop rubber-banding, so
+    // we lock the body with `position: fixed` at the current scrollY and
+    // restore it on cleanup. Also preserve previous inline styles.
     const prevOverflow = document.body.style.overflow;
+    const prevPosition = document.body.style.position;
+    const prevTop = document.body.style.top;
+    const prevWidth = document.body.style.width;
+    const scrollY = window.scrollY || window.pageYOffset || 0;
+
     document.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.width = "100%";
 
-    // Cleanup: remove listener and restore scroll behaviour
+    // Cleanup: remove listener and restore scroll behaviour and position
     return () => {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = prevOverflow;
+      document.body.style.position = prevPosition;
+      document.body.style.top = prevTop;
+      document.body.style.width = prevWidth;
+      // restore the scroll position that was at the time of opening
+      window.scrollTo(0, scrollY);
     };
   }, [isOpen, onClose]);
 

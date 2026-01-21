@@ -8,6 +8,9 @@
   justify-content: center;
   z-index: 1000;
   padding: 1rem;
+  /* Prevent touch-driven overscroll from propagating to the document on iOS */
+  overscroll-behavior: contain;
+  touch-action: manipulation;
 }
 
 .rp-modal {
@@ -62,6 +65,9 @@
   max-height: 72vh;
   overflow: auto;
   color: var(--app-text);
+  /* Allow smooth scrolling inside the modal on iOS but prevent rubber-band */
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 /* Specific rules to improve readability of forms inside the modal */
