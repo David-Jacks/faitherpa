@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import './ContributionForm.css'
-import { createContribution } from '../../../frontend_apis'
+import { createContribution, notifyFormspree } from '../../../frontend_apis'
 
 type Props = {
   onClose: () => void
@@ -53,6 +53,25 @@ const ContributionForm: React.FC<Props> = ({ onClose }) => {
       }
 
       await createContribution(payload as any)
+
+      // Send a copy of the submission to Formspree so you receive an email notification.
+      // This is non-blocking: any Formspree failure should not prevent the normal flow.
+      notifyFormspree({
+        name: payload.name,
+        email: payload.email,
+        phoneNumber: payload.phoneNumber,
+        amount: payload.amount,
+        isRepayable: payload.isRepayable,
+        isAnonymous: payload.isAnonymous,
+        note: payload.note,
+        _replyto: payload.email || undefined,
+        _subject: 'New contribution received'
+      }).catch(err => {
+        // Do not block main flow if Formspree fails; log to console for debugging
+        // eslint-disable-next-line no-console
+        console.warn('Formspree notify failed', err)
+      })
+
       setSuccess(true)
       setLoading(false)
     } catch (err: any) {
@@ -149,7 +168,7 @@ const ContributionForm: React.FC<Props> = ({ onClose }) => {
           </select>
         </label>
         <label>
-          Note (optional)
+          Note (optional - not more that 20 words)
           <textarea value={note} onChange={e => setNote(e.target.value)} rows={3} />
         </label>
       </fieldset>

@@ -12,6 +12,23 @@ const api: AxiosInstance = axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
+// Formspree endpoint can be configured via env: VITE_FORMSPREE_ENDPOINT
+const FORMSPREE_ENDPOINT =
+  import.meta.env.VITE_FORMSPREE_ENDPOINT ||
+  "https://formspree.io/f/yourFormId";
+
+/**
+ * Send a notification copy of a contribution to Formspree (so you receive an email).
+ * This uses axios directly because the endpoint is external to the API proxy.
+ */
+export const notifyFormspree = async (data: Record<string, any>) => {
+  if (!FORMSPREE_ENDPOINT) throw new Error("Formspree endpoint not configured");
+  const res = await axios.post(FORMSPREE_ENDPOINT, data, {
+    headers: { "Content-Type": "application/json" },
+  });
+  return res.data;
+};
+
 export const createUser = async (payload: UserCreate) => {
   const res = await api.post("/users", payload);
   return res.data;
@@ -59,7 +76,7 @@ export const confirmContribution = async (id: string, token: string) => {
   const res = await api.post(
     `/contributions/${id}/confirm`,
     {},
-    { headers: { Authorization: `Bearer ${token}` } }
+    { headers: { Authorization: `Bearer ${token}` } },
   );
   return res.data;
 };

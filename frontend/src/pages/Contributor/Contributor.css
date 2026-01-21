@@ -234,7 +234,7 @@
 }
 
 @media (max-width: 480px) {
-  .contrib-logo {
+  .contrib-header .contrib-logo {
     font-size: 1rem
   }
   .contrib-header {
