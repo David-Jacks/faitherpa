@@ -1,5 +1,6 @@
 import express from "express";
 import path from "path";
+import fs from "fs";
 import dotenv from "dotenv";
 import helmet from "helmet";
 import morgan from "morgan";
@@ -47,10 +48,16 @@ const frontendDist = path.join(__dirname, "..", "frontend", "dist");
 app.use(express.static(frontendDist));
 
 // SPA fallback: return index.html for any non-API route so client-side routing works
-app.get("/*", (req, res, next) => {
+// SPA fallback: return index.html for any non-API route so client-side routing works
+// Use a middleware (no path pattern) to avoid path-to-regexp parsing issues.
+app.use((req, res, next) => {
   // let API routes 404 normally
   if (req.path.startsWith("/api/") || req.path === "/api") return next();
-  res.sendFile(path.join(frontendDist, "index.html"), (err) => {
+
+  const indexPath = path.join(frontendDist, "index.html");
+  if (!fs.existsSync(indexPath)) return next();
+
+  res.sendFile(indexPath, (err) => {
     if (err) next(err);
   });
 });
