@@ -104,7 +104,7 @@ const ContributionForm: React.FC<Props> = ({ onClose }) => {
               const cleaned = v.replace(/[^+\d]/g, '')
               setPhoneNumber(cleaned)
             }}
-            placeholder="Optional (e.g. +1234567890)"
+            placeholder="(e.g. +1234567890)"
             inputMode="tel"
             type="tel"
           />
@@ -116,7 +116,7 @@ const ContributionForm: React.FC<Props> = ({ onClose }) => {
             <input
               value={password}
               onChange={e => setPassword(e.target.value)}
-              placeholder="Optional"
+              placeholder="For security"
               type={showPassword ? 'text' : 'password'}
             />
             <button

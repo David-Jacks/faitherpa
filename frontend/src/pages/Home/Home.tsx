@@ -16,7 +16,7 @@ const Home: React.FC = () => {
           <div className="landing-logo" aria-hidden>
             <span className="contrib-logo">Faitherpa</span>
           </div>
-        <div className="site-tag">Supporting my vision and show me love</div>
+        <div className="site-tag">Please help support my vision</div>
       </div>
 
       <div className="landing-main">
